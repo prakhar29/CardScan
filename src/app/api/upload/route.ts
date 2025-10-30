@@ -59,7 +59,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "No file found" }, { status: 400 });
     }
 
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-lite" });
 
     const prompt =
       'Extract the following information from this business card image: Company Name, Personal Name, Designation, up to three Phone numbers, Email, Website, and Address. Return the result as a JSON object with keys "companyName", "personalName", "designation", "phone1", "phone2", "phone3", "email", "website", and "address". If a value is not found for any field, return an empty string for that key.';
