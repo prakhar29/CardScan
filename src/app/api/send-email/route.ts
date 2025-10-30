@@ -3,10 +3,14 @@ import { getServerSession } from "next-auth/next";
 import { google } from "googleapis";
 import { authOptions } from "@/lib/auth";
 
+interface ExtendedSession {
+  accessToken?: string;
+}
+
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
 
-  if (!session || !(session as any).accessToken) {
+  if (!session || !(session as ExtendedSession).accessToken) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -14,7 +18,7 @@ export async function POST(req: NextRequest) {
     const { to, subject, body } = await req.json();
 
     const auth = new google.auth.OAuth2();
-    auth.setCredentials({ access_token: (session as any).accessToken });
+    auth.setCredentials({ access_token: (session as ExtendedSession).accessToken });
 
     const gmail = google.gmail({ version: "v1", auth });
 

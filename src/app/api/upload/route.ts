@@ -123,7 +123,7 @@ export async function POST(req: NextRequest) {
           },
         });
       }
-    } catch (err) {
+    } catch {
       // Ignore error if the sheet doesn't exist yet, it will be created by append
       console.log("Could not read sheet, probably empty. That's OK.");
     }

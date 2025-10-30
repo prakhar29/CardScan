@@ -32,8 +32,10 @@ export const authOptions: NextAuthOptions = {
       if (session.user) {
         // Here, you might want to add more user info to the session
       }
-      (session as any).accessToken = token.accessToken;
-      return session;
+      return {
+        ...session,
+        accessToken: token.accessToken,
+      };
     },
   },
 }; 
