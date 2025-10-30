@@ -1,12 +1,11 @@
 # EventAssist - Business Card Scanner 📇
 
-A modern web application that uses AI to extract contact information from business card images and automatically saves it to Google Sheets. Features email integration and WhatsApp quick actions.
+A modern web application that uses AI to extract contact information from business card images and automatically saves it to Google Sheets. Features WhatsApp quick actions for instant messaging.
 
 ## Features
 
 - 📸 **AI-Powered OCR**: Uses Google Gemini AI to extract text from business cards
 - 📊 **Auto-Save to Google Sheets**: Automatically stores contacts in your spreadsheet
-- 📧 **Gmail Integration**: Send follow-up emails directly from the app
 - 💬 **WhatsApp Quick Actions**: One-click WhatsApp messaging
 - 📱 **Mobile-Friendly**: Fully responsive, works great on phones and tablets
 - 🎨 **Modern UI**: Beautiful dark mode support
@@ -38,16 +37,9 @@ A modern web application that uses AI to extract contact information from busine
 4. **Add Environment Variables in Vercel**:
    ```
    GEMINI_API_KEY=your_gemini_api_key
-   GOOGLE_CLIENT_ID=your_google_oauth_client_id
-   GOOGLE_CLIENT_SECRET=your_google_oauth_client_secret
-   NEXTAUTH_SECRET=run: openssl rand -base64 32
-   NEXTAUTH_URL=https://your-app.vercel.app
    GOOGLE_SHEET_ID=your_google_sheet_id
    GOOGLE_SERVICE_ACCOUNT_JSON=paste_entire_credentials_json_here
    ```
-
-5. **Update OAuth Redirect URI** in Google Cloud Console:
-   - Add: `https://your-app.vercel.app/api/auth/callback/google`
 
 That's it! Share the link with your team 🚀
 
@@ -62,11 +54,7 @@ That's it! Share the link with your team 🚀
 
 3. Create `.env.local` with:
    ```
-   GEMINI_API_KEY=your_key
-   GOOGLE_CLIENT_ID=your_id
-   GOOGLE_CLIENT_SECRET=your_secret
-   NEXTAUTH_SECRET=your_secret
-   NEXTAUTH_URL=http://localhost:3000
+   GEMINI_API_KEY=your_gemini_api_key
    GOOGLE_SHEET_ID=your_sheet_id
    ```
 
@@ -92,10 +80,9 @@ See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed deployment instructions includ
 - **Framework**: Next.js 15 (App Router)
 - **Styling**: Tailwind CSS
 - **AI**: Google Gemini 2.5 Flash
-- **Auth**: NextAuth.js
-- **APIs**: Google Sheets API, Gmail API
+- **APIs**: Google Sheets API
 - **Deployment**: Vercel
 
 ## Need Help?
 
-Check out the [DEPLOYMENT.md](./DEPLOYMENT.md) guide for troubleshooting and detailed setup instructions.
+Check out the [SIMPLE_DEPLOY.md](./SIMPLE_DEPLOY.md) guide for detailed step-by-step setup instructions.
