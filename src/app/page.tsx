@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { SessionProvider, useSession, signIn, signOut } from "next-auth/react";
 
 interface ExtractedData {
   companyName: string;
@@ -15,130 +14,6 @@ interface ExtractedData {
   address: string;
 }
 
-const EmailModal = ({
-  show,
-  onClose,
-  email,
-  personalName,
-}: {
-  show: boolean;
-  onClose: () => void;
-  email: string;
-  personalName: string;
-}) => {
-  const { data: session } = useSession();
-  const [subject, setSubject] = useState(`Following up`);
-  const [body, setBody] = useState(
-    `Hi ${personalName},\n\nIt was great connecting with you. Let's keep in touch.\n\nBest,\n[Your Name]`
-  );
-
-  if (!show) {
-    return null;
-  }
-
-  const handleSend = async () => {
-    try {
-      const response = await fetch("/api/send-email", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          to: email,
-          subject,
-          body,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to send email.");
-      }
-
-      alert("Email sent successfully!");
-      onClose();
-    } catch (error) {
-      console.error("Error sending email:", error);
-      alert("Failed to send email. Please try again.");
-    }
-  };
-
-  return (
-    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-      <div className="relative top-20 mx-auto p-5 border w-full max-w-2xl shadow-lg rounded-md bg-white dark:bg-gray-800">
-        <div className="mt-3 text-center">
-          <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-gray-100">
-            Send Email to {personalName}
-          </h3>
-          {!session ? (
-            <div className="mt-4">
-              <p className="text-gray-600 dark:text-gray-400 mb-4">
-                You need to sign in with Google to send emails.
-              </p>
-              <button
-                onClick={() => signIn("google")}
-                className="px-4 py-2 bg-blue-600 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                Sign in with Google
-              </button>
-            </div>
-          ) : (
-            <>
-              <div className="mt-2 px-7 py-3">
-                <div className="mb-4 text-left">
-                  <label
-                    htmlFor="subject"
-                    className="block text-sm font-medium text-gray-700 dark:text-gray-300"
-                  >
-                    Subject
-                  </label>
-                  <input
-                    type="text"
-                    id="subject"
-                    value={subject}
-                    onChange={(e) => setSubject(e.target.value)}
-                    className="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  />
-                </div>
-                <div className="mb-4 text-left">
-                  <label
-                    htmlFor="body"
-                    className="block text-sm font-medium text-gray-700 dark:text-gray-300"
-                  >
-                    Body
-                  </label>
-                  <textarea
-                    id="body"
-                    rows={10}
-                    value={body}
-                    onChange={(e) => setBody(e.target.value)}
-                    className="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  />
-                </div>
-              </div>
-              <div className="items-center px-4 py-3">
-                <button
-                  id="send-btn"
-                  onClick={handleSend}
-                  className="px-4 py-2 bg-blue-600 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  Send
-                </button>
-                <button
-                  id="cancel-btn"
-                  onClick={onClose}
-                  className="mt-3 px-4 py-2 bg-gray-200 text-gray-800 text-base font-medium rounded-md w-full shadow-sm hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400"
-                >
-                  Cancel
-                </button>
-              </div>
-            </>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-};
-
 function Home() {
   const [file, setFile] = useState<File | null>(null);
   const [extractedText, setExtractedText] = useState<ExtractedData | null>(
@@ -146,7 +21,6 @@ function Home() {
   );
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [showEmailModal, setShowEmailModal] = useState(false);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
@@ -165,10 +39,6 @@ function Home() {
     } else {
       setError("Invalid phone number to send WhatsApp message.");
     }
-  };
-
-  const handleSendEmail = () => {
-    setShowEmailModal(true);
   };
 
   const handleUpload = async () => {
@@ -353,34 +223,14 @@ function Home() {
                   WhatsApp
                 </button>
               )}
-              {extractedText.email && (
-                <button
-                  onClick={handleSendEmail}
-                  className="flex-1 inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                >
-                  Email
-                </button>
-              )}
             </div>
           </div>
         )}
       </div>
-      {extractedText && (
-        <EmailModal
-          show={showEmailModal}
-          onClose={() => setShowEmailModal(false)}
-          email={extractedText.email}
-          personalName={extractedText.personalName}
-        />
-      )}
     </div>
   );
 }
 
 export default function HomePage() {
-  return (
-    <SessionProvider>
-      <Home />
-    </SessionProvider>
-  );
+  return <Home />;
 }
